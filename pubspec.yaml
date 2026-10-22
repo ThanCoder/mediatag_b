@@ -1,0 +1,19 @@
+name: mediatag_b
+description: "ffmpeg binary media tag."
+repository: https://github.com/ThanCoder/mediatag_b.git
+version: 0.1.0
+
+environment:
+  sdk: ^3.13.5
+
+dependencies:
+  code_assets: ^1.1.0
+  hooks: ^2.0.0
+  android_native_path:
+    git: https://github.com/ThanCoder/android_native_path.git
+
+dev_dependencies:
+  ffi: ^2.1.4
+  ffigen: ^20.1.1
+  flutter_lints: ^6.0.0
+  test: ^1.28.0
