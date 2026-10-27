@@ -5,10 +5,17 @@ import 'package:hooks/hooks.dart';
 
 const String linuxP =
     '/home/thancoder/Documents/ffmpeg-9.0.1-than-media-tag-native-so/binary/linux';
+const String windowP =
+    '/home/thancoder/Documents/ffmpeg-9.0.1-than-media-tag-native-so/binary/window';
 const String androidArm64 =
     '/home/thancoder/Documents/ffmpeg-9.0.1-than-media-tag-native-so/binary/android-arm64';
 const String androidArm =
     '/home/thancoder/Documents/ffmpeg-9.0.1-than-media-tag-native-so/binary/android-arm';
+
+// const String linuxP = 'https://github.com/ThanCoder/mediatag_b/releases/download/mediatag_b.v1/mediatag_b-linux.zip';
+// const String windowP = 'https://github.com/ThanCoder/mediatag_b/releases/download/mediatag_b.v1/mediatag_b-window.zip';
+// const String androidArm64 = 'https://github.com/ThanCoder/mediatag_b/releases/download/mediatag_b.v1/mediatag_b-android-arm64.zip';
+// const String androidArm = 'https://github.com/ThanCoder/mediatag_b/releases/download/mediatag_b.v1/mediatag_b-android-arm.zip';
 
 void main(List<String> args) async {
   await build(args, (input, output) async {
