@@ -1,0 +1,77 @@
+name: Build FFmpeg for Windows
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+
+jobs:
+  build-windows:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Source
+      uses: actions/checkout@v4
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential yasm nasm pkg-config mingw-w64
+
+    - name: Configure FFmpeg for Windows
+      run: |
+        CFLAGS="-Os -ffunction-sections -fdata-sections" \
+        LDFLAGS="-Wl,--gc-sections" \
+        ./configure \
+          --target-os=mingw32 \
+          --cross-prefix=x86_64-w64-mingw32- \
+          --prefix="$PWD/build" \
+          --enable-small \
+          --enable-pic \
+          --disable-shared \
+          --enable-static \
+          --disable-everything \
+          --disable-doc \
+          --disable-debug \
+          --disable-network \
+          --disable-autodetect \
+          --disable-avdevice \
+          --disable-swresample \
+          --disable-swscale \
+          --disable-bsfs \
+          --disable-hwaccels \
+          --disable-parsers \
+          --enable-avutil \
+          --enable-avcodec \
+          --enable-avformat \
+          --enable-avfilter \
+          --enable-protocol=file \
+          --enable-parser=h264 \
+          --enable-parser=mpegaudio \
+          --enable-demuxer=mov \
+          --enable-demuxer=matroska \
+          --enable-demuxer=ogg \
+          --enable-demuxer=mp3 \
+          --enable-demuxer=flac \
+          --enable-demuxer=wav \
+          --enable-muxer=mov \
+          --enable-muxer=matroska \
+          --enable-muxer=image2 \
+          --enable-decoder=h264 \
+          --enable-decoder=aac \
+          --enable-encoder=mjpeg \
+          --enable-encoder=png
+
+    - name: Build and Install
+      run: |
+        make -j$(nproc)
+        make install
+
+    - name: Upload Windows Binaries
+      uses: actions/upload-artifact@v4
+      with:
+        name: ffmpeg-windows-x86_64
+        path: build/bin/*.exe

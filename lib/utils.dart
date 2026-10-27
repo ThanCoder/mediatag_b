@@ -10,6 +10,7 @@ Future<String> getPlatformLibFullPath(String libName) async {
   }
   if (Platform.isAndroid) {
     final path = await AndroidNativePath.instance.getNativeLib(libName);
+    // final path = await AndroidNativePath.instance.getFFmpegLibPath();
     return path!;
   }
   throw UnsupportedError('Unsupported ${Platform.operatingSystem}!');

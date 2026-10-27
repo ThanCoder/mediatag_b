@@ -1,10 +1,19 @@
-import 'dart:io';
-
 import 'package:android_native_path/android_native_path.dart';
 import 'package:flutter/material.dart';
+import 'package:mediatag_b/keys.dart';
 import 'package:mediatag_b/mediatag_b.dart';
+import 'package:mediatag_b/utils.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final ffmpegPath = await getPlatformLibFullPath(ffmpegLibName);
+  final ffprobePath = await getPlatformLibFullPath(ffprobeLibName);
+  await makeExecutableAndRun(ffmpegPath);
+  await makeExecutableAndRun(ffprobePath);
+
+  print('[:Dev]: ${await AndroidNativePath.instance.nativeLibraries}');
+
   runApp(MaterialApp(home: const MyApp()));
 }
 
@@ -17,10 +26,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String infoText = '';
-  void fetch() async {
-    // final path = await AndroidNativePath.instance.nativeLibraryDir;
-    // final dir = Directory(path!);
-
+  void fetchFFmpeg() async {
     final res = await getFFmpegVersionInfo();
     if (res != null) {
       infoText = res;
@@ -46,7 +52,7 @@ class _MyAppState extends State<MyApp> {
         children: [
           FloatingActionButton(
             heroTag: 'ffmeg',
-            onPressed: fetch,
+            onPressed: fetchFFmpeg,
             child: Text('FFmpeg'),
           ),
           FloatingActionButton(

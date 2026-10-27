@@ -1,0 +1,44 @@
+CFLAGS="-Os -ffunction-sections -fdata-sections" \
+LDFLAGS="-Wl,--gc-sections" \
+./configure \
+  --target-os=mingw32 \
+  --cross-prefix=x86_64-w64-mingw32- \
+  --prefix="$PWD/build" \
+  --enable-small \
+  --enable-pic \
+  --disable-shared \
+  --enable-static \
+  --disable-everything \
+  --disable-doc \
+  --disable-debug \
+  --disable-network \
+  --disable-autodetect \
+  --disable-avdevice \
+  --disable-swresample \
+  --disable-swscale \
+  --disable-bsfs \
+  --disable-hwaccels \
+  --disable-parsers \
+  --enable-avutil \
+  --enable-avcodec \
+  --enable-avformat \
+  --enable-avfilter \
+  --enable-protocol=file \
+  --enable-parser=h264 \
+  --enable-parser=mpegaudio \
+  --enable-demuxer=mov \
+  --enable-demuxer=matroska \
+  --enable-demuxer=ogg \
+  --enable-demuxer=mp3 \
+  --enable-demuxer=flac \
+  --enable-demuxer=wav \
+  --enable-muxer=mov \
+  --enable-muxer=matroska \
+  --enable-muxer=image2 \
+  --enable-decoder=h264 \
+  --enable-decoder=aac \
+  --enable-encoder=mjpeg \
+  --enable-encoder=png
+
+make -j$(nproc)
+make install
