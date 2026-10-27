@@ -1,7 +1,16 @@
+git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg
+cd ffmpeg
+
+
+make distclean
+make clean
+
+
 CFLAGS="-Os -ffunction-sections -fdata-sections" \
 LDFLAGS="-Wl,--gc-sections" \
 ./configure \
   --target-os=mingw32 \
+  --arch=x86_64 \
   --cross-prefix=x86_64-w64-mingw32- \
   --prefix="$PWD/build" \
   --enable-small \
@@ -40,5 +49,7 @@ LDFLAGS="-Wl,--gc-sections" \
   --enable-encoder=mjpeg \
   --enable-encoder=png
 
-make -j$(nproc)
+
+
+  make -j$(nproc)
 make install

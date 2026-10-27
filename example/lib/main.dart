@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:android_native_path/android_native_path.dart';
 import 'package:flutter/material.dart';
 import 'package:mediatag_b/keys.dart';
@@ -12,7 +14,9 @@ void main() async {
   await makeExecutableAndRun(ffmpegPath);
   await makeExecutableAndRun(ffprobePath);
 
-  print('[:Dev]: ${await AndroidNativePath.instance.nativeLibraries}');
+  if (Platform.isAndroid) {
+    print('[:Dev]: ${await AndroidNativePath.instance.nativeLibraries}');
+  }
 
   runApp(MaterialApp(home: const MyApp()));
 }
