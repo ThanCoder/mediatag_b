@@ -46,9 +46,7 @@ LDFLAGS="-Wl,--gc-sections" \
   --enable-muxer=image2 \
   --enable-decoder=h264 \
   --enable-decoder=aac \
-  --enable-encoder=mjpeg \
-  --enable-encoder=png
-
+  --enable-encoder=mjpeg
 
 
   make -j$(nproc)
