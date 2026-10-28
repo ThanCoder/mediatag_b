@@ -28,6 +28,7 @@ class MediatagBinary {
     }
   }
 
+  /// ffpmpeg version
   Future<String?> getFFmpegVersionInfo() async {
     final libPath = await ffmpegLibPath;
     if (libPath == null) return null;
@@ -36,6 +37,7 @@ class MediatagBinary {
     return p.stdout;
   }
 
+  /// ffpobe version
   Future<String?> getFFprobeVersionInfo() async {
     final libPath = await ffprobeLibPath;
     if (libPath == null) return null;

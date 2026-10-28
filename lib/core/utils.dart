@@ -25,6 +25,10 @@ String getDesktopLibFullPath(String libName) {
 
   // 3. lib folder ထဲရှိ libName ရဲ့ absolute path ကို တည်ဆောက်ခြင်း
   // (ဥပမာ - app တည်ရှိရာ folder အောက်မှ lib/libname.so)
+
+  if (Platform.isWindows) {
+    return File(executableDir.join('lib').join(libName)).absolute.path;
+  }
   final libPath = executableDir.join('lib').join(libName);
 
   return File(libPath).absolute.path;

@@ -1,8 +1,9 @@
 import 'dart:io';
 
+import 'package:archive/archive.dart';
 import 'package:code_assets/code_assets.dart';
 import 'package:hooks/hooks.dart';
-import 'package:archive/archive.dart';
+import 'package:mediatag_b/core/keys.dart';
 import 'package:path/path.dart' as p;
 
 // const String linuxP =
@@ -26,64 +27,32 @@ const String androidArmLibUr =
 void main(List<String> args) async {
   await build(args, (input, output) async {
     final packageName = input.packageName;
-    final targetArchitecture = input.config.code.targetArchitecture;
-    final targetOS = input.config.code.targetOS;
-    final libName1 = 'libffmpeg.so';
-    final libName2 = 'libffprobe.so';
-
-    // final sourceLib = input.packageRoot.toFilePath()
-    //     .join('.dart_tool')
-    //     .join('native_assets');
     final packageRootDir = input.packageRoot.toFilePath();
     final sourceLib = p.join(packageRootDir, '.dart_tool', 'native_assets');
 
-    final file1 = await extraceLibSo(
+    final ffmpegLib = LibArchiveConfig.create(
+      input.config.code,
       sourceLib,
-      libName: libName1,
-      targetOS: targetOS,
-      targetArchitecture: targetArchitecture,
-    );
-    final file2 = await extraceLibSo(
-      sourceLib,
-      libName: libName2,
-      targetOS: targetOS,
-      targetArchitecture: targetArchitecture,
+      ffmpegLibName,
     );
 
-    // if (targetOS == .linux) {
-    //   file1 = File('$linuxP/$libName1');
-    //   file2 = File('$linuxP/$libName2');
-    // }
-    // if (targetOS == .windows) {
-    //   file1 = File('$windowP/$libName1');
-    //   file2 = File('$windowP/$libName2');
-    // }
-
-    // if (targetOS == .android) {
-    //   if (targetArchitecture == .arm64) {
-    //     file1 = File('$androidArm64/$libName1');
-    //     file2 = File('$androidArm64/$libName2');
-    //   }
-    //   if (targetArchitecture == .arm) {
-    //     file1 = File('$androidArm/$libName1');
-    //     file2 = File('$androidArm/$libName2');
-    //   }
-    // }
+    await extractLib(ffmpegLib);
 
     output.assets.code.add(
       .new(
         package: packageName,
-        name: libName1,
+        name: ffmpegLibName,
         linkMode: DynamicLoadingBundled(),
-        file: file1.uri,
+        file: ffmpegLib.libOutFile.uri,
       ),
     );
     output.assets.code.add(
       .new(
         package: packageName,
-        name: libName2,
+        name: ffprobeLibName,
         linkMode: DynamicLoadingBundled(),
-        file: file2.uri,
+        file: File(p.join(ffmpegLib.libOutFile.parent.path, ffprobeLibName))
+            .uri,
       ),
     );
   });
@@ -95,85 +64,14 @@ void main(List<String> args) async {
 //   }
 // }
 
-Future<File> extraceLibSo(
-  String sourceLib, {
-  required String libName,
-  required OS targetOS,
-  required Architecture targetArchitecture,
-}) async {
-  if (targetOS == .linux) {
-    // final libFile = File(sourceLib.join(targetOS.name).join(libName));
-    final libFile = File(p.join(sourceLib, targetOS.name, libName));
-    if (libFile.existsSync()) return libFile;
-    // final sourceZipFile = File(sourceLib.join(targetOS.name).join('linux.zip'));
-    final sourceZipFile = File(p.join(sourceLib, targetOS.name, 'linux.zip'));
-    // zip ရှိရင်
-    if (sourceZipFile.existsSync()) {
-      await extractZip(sourceZipFile, libFile);
-      return libFile;
-    }
-
-    await downloadLib(linuxLibUrl, sourceZipFile);
-    await extractZip(sourceZipFile, libFile);
-    return libFile;
+Future<void> extractLib(LibArchiveConfig config) async {
+  if (config.libOutFile.existsSync()) return;
+  if (config.libZipFile.existsSync()) {
+    await extractZip(config.libZipFile, config.libOutFile.parent);
+    return;
   }
-  if (targetOS == .windows) {
-    // final libFile = File(sourceLib.join(targetOS.name).join(libName));
-    final libFile = File(p.join(sourceLib, targetOS.name, libName));
-    if (libFile.existsSync()) return libFile;
-    final sourceZipFile = File(
-      // sourceLib.join(targetOS.name).join('window.zip'),
-      p.join(sourceLib, targetOS.name, 'window.zip'),
-    );
-    // zip ရှိရင်
-    if (sourceZipFile.existsSync()) {
-      await extractZip(sourceZipFile, libFile);
-      return libFile;
-    }
-
-    await downloadLib(windowLibUrl, sourceZipFile);
-    await extractZip(sourceZipFile, libFile);
-    return libFile;
-  }
-  // android
-  if (targetOS == .android) {
-    // final androidLibPath = sourceLib.join(targetOS.name);
-    final androidLibPath = p.join(sourceLib, targetOS.name);
-    final libFile = File(
-      // androidLibPath.join(targetArchitecture.name).join(libName),
-      p.join(androidLibPath, targetArchitecture.name, libName),
-    );
-    if (libFile.existsSync()) return libFile;
-
-    // မရှိရင်
-    if (targetArchitecture == .arm) {
-      // final sourceZipFile = File(androidLibPath.join('arm.zip'));
-      final sourceZipFile = File(p.join(androidLibPath, 'arm.zip'));
-      if (sourceZipFile.existsSync()) {
-        await extractZip(sourceZipFile, libFile);
-        return libFile;
-      }
-      await downloadLib(androidArmLibUr, sourceZipFile);
-      await extractZip(sourceZipFile, libFile);
-    }
-
-    if (targetArchitecture == .arm64) {
-      // final sourceZipFile = File(androidLibPath.join('arm64.zip'));
-      final sourceZipFile = File(p.join(androidLibPath, 'arm64.zip'));
-
-      if (sourceZipFile.existsSync()) {
-        await extractZip(sourceZipFile, libFile);
-        return libFile;
-      }
-      await downloadLib(androidArm64LibUrl, sourceZipFile);
-      await extractZip(sourceZipFile, libFile);
-    }
-
-    return libFile;
-  }
-  throw UnsupportedError(
-    'Os: `$targetOS` - Architecture: `$targetArchitecture`',
-  );
+  await downloadLib(config.downloadUrl, config.libZipFile);
+  await extractZip(config.libZipFile, config.libOutFile.parent);
 }
 
 Future<void> downloadLib(String url, File output) async {
@@ -210,13 +108,73 @@ Future<void> downloadLib(String url, File output) async {
   }
 }
 
-Future<void> extractZip(File input, File output) async {
+Future<void> extractZip(File input, Directory outputFolder) async {
   final bytes = input.readAsBytesSync();
   final archive = ZipDecoder().decodeBytes(bytes);
   for (final entry in archive) {
     if (entry.isFile && entry.name.endsWith('.so')) {
-      output.parent.createSync(recursive: true);
-      await output.writeAsBytes(entry.content, flush: true);
+      outputFolder.createSync(recursive: true);
+      File(p.join(outputFolder.path, entry.name))
+          .writeAsBytes(entry.content, flush: true);
     }
+  }
+}
+
+class LibArchiveConfig {
+  const LibArchiveConfig({
+    required this.config,
+    required this.libOutFile,
+    required this.downloadUrl,
+    required this.libZipFile,
+  });
+
+  final CodeConfig config;
+  final File libOutFile;
+  final File libZipFile;
+  final String downloadUrl;
+
+  factory LibArchiveConfig.create(
+    CodeConfig cf,
+    String sourceLib,
+    String libName,
+  ) {
+    final targetOS = cf.targetOS;
+    final targetArch = cf.targetArchitecture;
+
+    if (cf.targetOS == .linux) {
+      final libOutPath = File(p.join(sourceLib, targetOS.name, libName));
+      return .new(
+        config: cf,
+        libOutFile: libOutPath,
+        downloadUrl: linuxLibUrl,
+        libZipFile: File(p.join(sourceLib, targetOS.name, 'linux.zip')),
+      );
+    }
+    if (cf.targetOS == .windows) {
+      final libOutPath = File(p.join(sourceLib, targetOS.name, libName));
+      return .new(
+        config: cf,
+        libOutFile: libOutPath,
+        downloadUrl: windowLibUrl,
+        libZipFile: File(p.join(sourceLib, targetOS.name, 'window.zip')),
+      );
+    }
+    if (targetOS == .android) {
+      final androidLibPath = p.join(sourceLib, targetOS.name);
+      final libOutFile = File(p.join(androidLibPath, targetArch.name, libName));
+      final downloadUrl = switch (targetArch) {
+        .arm => androidArmLibUr,
+        .arm64 => androidArm64LibUrl,
+        _ => UnsupportedError('error: ${targetOS.name} - ${targetArch.name}'),
+      };
+      return .new(
+        config: cf,
+        libOutFile: libOutFile,
+        downloadUrl: downloadUrl as String,
+        libZipFile: File(p.join(androidLibPath, '${targetArch.name}.zip')),
+      );
+    }
+
+    throw UnsupportedError('Not Supported: ${targetArch.name}');
   }
 }

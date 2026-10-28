@@ -29,6 +29,7 @@ class _MyAppState extends State<MyApp> {
   final pkg = MediatagBinary.instance;
 
   String infoText = '';
+
   void fetchFFmpeg() async {
     final res = await pkg.getFFmpegVersionInfo();
     if (res != null) {
@@ -56,12 +57,12 @@ class _MyAppState extends State<MyApp> {
           FloatingActionButton(
             heroTag: 'ffmeg',
             onPressed: fetchFFmpeg,
-            child: Text('FFmpeg'),
+            child: Text('FFmpeg Version'),
           ),
           FloatingActionButton(
             heroTag: 'FFprob',
             onPressed: fetchProb,
-            child: Text('FFprob'),
+            child: Text('FFprob Version'),
           ),
         ],
       ),
