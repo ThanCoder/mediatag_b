@@ -4,17 +4,12 @@ import 'dart:io';
 
 import 'package:android_native_path/android_native_path.dart';
 import 'package:flutter/material.dart';
-import 'package:mediatag_b/keys.dart';
 import 'package:mediatag_b/mediatag_b.dart';
-import 'package:mediatag_b/utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final ffmpegPath = await getPlatformLibFullPath(ffmpegLibName);
-  final ffprobePath = await getPlatformLibFullPath(ffprobeLibName);
-  await makeExecutableAndRun(ffmpegPath);
-  await makeExecutableAndRun(ffprobePath);
+  await MediatagBinary.instance.initailize();
 
   if (Platform.isAndroid) {
     print('[:Dev]: ${await AndroidNativePath.instance.nativeLibraries}');
@@ -31,9 +26,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final pkg = MediatagBinary.instance;
+
   String infoText = '';
   void fetchFFmpeg() async {
-    final res = await getFFmpegVersionInfo();
+    final res = await pkg.getFFmpegVersionInfo();
     if (res != null) {
       infoText = res;
       setState(() {});
@@ -41,7 +38,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void fetchProb() async {
-    final res = await getFFprobeVersionInfo();
+    final res = await pkg.getFFprobeVersionInfo();
     if (res != null) {
       infoText = res;
       setState(() {});

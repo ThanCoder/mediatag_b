@@ -5,8 +5,8 @@ import 'dart:io';
 import 'package:android_native_path/android_native_path.dart';
 
 Future<String> getPlatformLibFullPath(String libName) async {
-  if (Platform.isLinux) {
-    return getLinuxLibFullPath(libName);
+  if (Platform.isLinux || Platform.isWindows) {
+    return getDesktopLibFullPath(libName);
   }
   if (Platform.isAndroid) {
     final path = await AndroidNativePath.instance.getNativeLib(libName);
@@ -16,7 +16,7 @@ Future<String> getPlatformLibFullPath(String libName) async {
   throw UnsupportedError('Unsupported ${Platform.operatingSystem}!');
 }
 
-String getLinuxLibFullPath(String libName) {
+String getDesktopLibFullPath(String libName) {
   // 1. App binary ရှိနေသည့် file path ကို ယူခြင်း
   final executablePath = Platform.resolvedExecutable;
 

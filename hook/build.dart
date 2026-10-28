@@ -32,6 +32,10 @@ void main(List<String> args) async {
       file1 = File('$linuxP/$libName1');
       file2 = File('$linuxP/$libName2');
     }
+    if (targetOS == .windows) {
+      file1 = File('$windowP/$libName1');
+      file2 = File('$windowP/$libName2');
+    }
 
     if (targetOS == .android) {
       if (targetArchitecture == .arm64) {

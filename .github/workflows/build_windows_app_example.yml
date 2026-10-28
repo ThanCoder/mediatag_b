@@ -1,0 +1,39 @@
+name: Build Flutter App for Windows (Example)
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    # Job တစ်ခုလုံးအတွက် working-directory သတ်မှတ်ပေးခြင်း
+    defaults:
+      run:
+        working-directory: example
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        channel: 'stable'
+        cache: true
+        # flutter-action အတွက် working directory (လိုအပ်ရင် cache path တွေအတွက် အသုံးဝင်ပါတယ်)
+        flutter-path: example # (သို့မဟုတ် ပုံမှန်အတိုင်း root ကနေ run တာဖြစ်လို့ အောက်က step တွေမှာ path ထည့်ပေးရုံနဲ့လည်း ရပါတယ်)
+
+    - name: Install Dependencies
+      run: flutter pub get
+      # သို့မဟုတ် working-directory: example လို့ step တိုင်းမှာ ထည့်လို့ရပါတယ်
+
+    - name: Build Windows App
+      run: flutter build windows --release
+
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: flutter-windows-release
+        path: example/build/windows/x64/runner/Release/

@@ -1,18 +1,46 @@
 import 'dart:io';
 
-import 'package:mediatag_b/keys.dart';
-import 'package:mediatag_b/utils.dart';
+import 'package:mediatag_b/core/keys.dart';
+import 'package:mediatag_b/core/utils.dart';
 
-Future<String?> getFFmpegVersionInfo() async {
-  final libPath = await getPlatformLibFullPath(ffmpegLibName);
+class MediatagBinary {
+  static final MediatagBinary instance = MediatagBinary._();
+  MediatagBinary._();
+  factory MediatagBinary() => instance;
 
-  final p = await Process.run(libPath, ['-version']);
-  return p.stdout;
-}
+  /// ffmpeg binary fullpath
+  Future<String?> get ffmpegLibPath async =>
+      await getPlatformLibFullPath(ffmpegLibName);
 
-Future<String?> getFFprobeVersionInfo() async {
-  final libPath = await getPlatformLibFullPath(ffprobeLibName);
+  /// ffprobe binary fullpath
+  Future<String?> get ffprobeLibPath async =>
+      await getPlatformLibFullPath(ffprobeLibName);
 
-  final p = await Process.run(libPath, ['-version']);
-  return p.stdout;
+  /// binary initailize
+  Future<void> initailize() async {
+    final fflibPath = await ffmpegLibPath;
+    final ffprobelibPath = await ffprobeLibPath;
+    if (fflibPath != null) {
+      await makeExecutableAndRun(fflibPath);
+    }
+    if (ffprobelibPath != null) {
+      await makeExecutableAndRun(ffprobelibPath);
+    }
+  }
+
+  Future<String?> getFFmpegVersionInfo() async {
+    final libPath = await ffmpegLibPath;
+    if (libPath == null) return null;
+
+    final p = await Process.run(libPath, ['-version']);
+    return p.stdout;
+  }
+
+  Future<String?> getFFprobeVersionInfo() async {
+    final libPath = await ffprobeLibPath;
+    if (libPath == null) return null;
+
+    final p = await Process.run(libPath, ['-version']);
+    return p.stdout;
+  }
 }
