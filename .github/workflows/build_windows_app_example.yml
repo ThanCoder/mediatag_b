@@ -26,7 +26,7 @@ jobs:
         flutter-path: example # (သို့မဟုတ် ပုံမှန်အတိုင်း root ကနေ run တာဖြစ်လို့ အောက်က step တွေမှာ path ထည့်ပေးရုံနဲ့လည်း ရပါတယ်)
     
     - name: Clean Build Cache
-        run: flutter clean
+      run: flutter clean
 
     - name: Install Dependencies
       run: flutter pub get
