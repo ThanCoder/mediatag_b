@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:code_assets/code_assets.dart';
 import 'package:hooks/hooks.dart';
 import 'package:archive/archive.dart';
+import 'package:path/path.dart' as p;
 
 // const String linuxP =
 //     '/home/thancoder/Documents/ffmpeg-9.0.1-than-media-tag-native-so/binary/linux';
@@ -30,9 +31,11 @@ void main(List<String> args) async {
     final libName1 = 'libffmpeg.so';
     final libName2 = 'libffprobe.so';
 
-    final sourceLib = input.packageRoot.path
-        .join('.dart_tool')
-        .join('native_assets');
+    // final sourceLib = input.packageRoot.toFilePath()
+    //     .join('.dart_tool')
+    //     .join('native_assets');
+    final packageRootDir = input.packageRoot.toFilePath();
+    final sourceLib = p.join(packageRootDir, '.dart_tool', 'native_assets');
 
     final file1 = await extraceLibSo(
       sourceLib,
@@ -86,11 +89,11 @@ void main(List<String> args) async {
   });
 }
 
-extension StringJoin on String {
-  String join(String name) {
-    return '$this${Platform.pathSeparator}$name';
-  }
-}
+// extension StringJoin on String {
+//   String join(String name) {
+//     return '$this${Platform.pathSeparator}$name';
+//   }
+// }
 
 Future<File> extraceLibSo(
   String sourceLib, {
@@ -99,9 +102,11 @@ Future<File> extraceLibSo(
   required Architecture targetArchitecture,
 }) async {
   if (targetOS == .linux) {
-    final libFile = File(sourceLib.join(targetOS.name).join(libName));
+    // final libFile = File(sourceLib.join(targetOS.name).join(libName));
+    final libFile = File(p.join(sourceLib, targetOS.name, libName));
     if (libFile.existsSync()) return libFile;
-    final sourceZipFile = File(sourceLib.join(targetOS.name).join('linux.zip'));
+    // final sourceZipFile = File(sourceLib.join(targetOS.name).join('linux.zip'));
+    final sourceZipFile = File(p.join(sourceLib, targetOS.name, 'linux.zip'));
     // zip ရှိရင်
     if (sourceZipFile.existsSync()) {
       await extractZip(sourceZipFile, libFile);
@@ -113,10 +118,12 @@ Future<File> extraceLibSo(
     return libFile;
   }
   if (targetOS == .windows) {
-    final libFile = File(sourceLib.join(targetOS.name).join(libName));
+    // final libFile = File(sourceLib.join(targetOS.name).join(libName));
+    final libFile = File(p.join(sourceLib, targetOS.name, libName));
     if (libFile.existsSync()) return libFile;
     final sourceZipFile = File(
-      sourceLib.join(targetOS.name).join('window.zip'),
+      // sourceLib.join(targetOS.name).join('window.zip'),
+      p.join(sourceLib, targetOS.name, 'window.zip'),
     );
     // zip ရှိရင်
     if (sourceZipFile.existsSync()) {
@@ -130,15 +137,18 @@ Future<File> extraceLibSo(
   }
   // android
   if (targetOS == .android) {
-    final androidLibPath = sourceLib.join(targetOS.name);
+    // final androidLibPath = sourceLib.join(targetOS.name);
+    final androidLibPath = p.join(sourceLib, targetOS.name);
     final libFile = File(
-      androidLibPath.join(targetArchitecture.name).join(libName),
+      // androidLibPath.join(targetArchitecture.name).join(libName),
+      p.join(androidLibPath, targetArchitecture.name, libName),
     );
     if (libFile.existsSync()) return libFile;
 
     // မရှိရင်
     if (targetArchitecture == .arm) {
-      final sourceZipFile = File(androidLibPath.join('arm.zip'));
+      // final sourceZipFile = File(androidLibPath.join('arm.zip'));
+      final sourceZipFile = File(p.join(androidLibPath, 'arm.zip'));
       if (sourceZipFile.existsSync()) {
         await extractZip(sourceZipFile, libFile);
         return libFile;
@@ -148,7 +158,8 @@ Future<File> extraceLibSo(
     }
 
     if (targetArchitecture == .arm64) {
-      final sourceZipFile = File(androidLibPath.join('arm64.zip'));
+      // final sourceZipFile = File(androidLibPath.join('arm64.zip'));
+      final sourceZipFile = File(p.join(androidLibPath, 'arm64.zip'));
 
       if (sourceZipFile.existsSync()) {
         await extractZip(sourceZipFile, libFile);
