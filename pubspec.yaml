@@ -8,13 +8,18 @@ version: 0.1.0
 environment:
   sdk: ^3.13.5
 
+platforms:
+  android:
+  linux:
+  windows:
+
+
 dependencies:
   code_assets: ^1.1.0
   hooks: ^2.0.0
   android_native_path: ^0.1.0
   archive: ^4.5.2
   path: ^1.9.1
-  
 
 dev_dependencies:
   ffi: ^2.1.4

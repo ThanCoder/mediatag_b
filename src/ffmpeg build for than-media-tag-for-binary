@@ -3,7 +3,6 @@ make distclean
 make clean
 
 CFLAGS="-Os -ffunction-sections -fdata-sections" \
-CFLAGS="-Os -ffunction-sections -fdata-sections" \
 LDFLAGS="-Wl,--gc-sections" \
 ./configure \
   --prefix="$PWD/build" \

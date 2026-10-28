@@ -1,5 +1,12 @@
 # mediatag_b
 
+### Supported
++ Linux
++ Android
++ Window
+
+### For Android
+
 ```kts
 
 ### android/app/build.gradle.kts

@@ -6,23 +6,14 @@ import 'package:hooks/hooks.dart';
 import 'package:mediatag_b/core/keys.dart';
 import 'package:path/path.dart' as p;
 
-// const String linuxP =
-//     '/home/thancoder/Documents/ffmpeg-9.0.1-than-media-tag-native-so/binary/linux';
-// const String windowP =
-//     '/home/thancoder/Documents/ffmpeg-9.0.1-than-media-tag-native-so/binary/window';
-// const String androidArm64 =
-//     '/home/thancoder/Documents/ffmpeg-9.0.1-than-media-tag-native-so/binary/android-arm64';
-// const String androidArm =
-//     '/home/thancoder/Documents/ffmpeg-9.0.1-than-media-tag-native-so/binary/android-arm';
-
 const String linuxLibUrl =
-    'https://github.com/ThanCoder/mediatag_b/releases/download/mediatag_b.v1/mediatag_b-linux.zip';
+    'https://github.com/ThanCoder/mediatag_b/releases/download/mediatag_b.v2/mediatag_b_binary-linux.zip';
 const String windowLibUrl =
-    'https://github.com/ThanCoder/mediatag_b/releases/download/mediatag_b.v1/mediatag_b-window.zip';
+    'https://github.com/ThanCoder/mediatag_b/releases/download/mediatag_b.v2/mediatag_b_binary-window.zip';
 const String androidArm64LibUrl =
-    'https://github.com/ThanCoder/mediatag_b/releases/download/mediatag_b.v1/mediatag_b-android-arm64.zip';
+    'https://github.com/ThanCoder/mediatag_b/releases/download/mediatag_b.v2/mediatag_b_binary-android-arm64.zip';
 const String androidArmLibUr =
-    'https://github.com/ThanCoder/mediatag_b/releases/download/mediatag_b.v1/mediatag_b-android-arm.zip';
+    'https://github.com/ThanCoder/mediatag_b/releases/download/mediatag_b.v2/mediatag_b_binary-android-arm.zip';
 
 void main(List<String> args) async {
   await build(args, (input, output) async {
@@ -57,12 +48,6 @@ void main(List<String> args) async {
     );
   });
 }
-
-// extension StringJoin on String {
-//   String join(String name) {
-//     return '$this${Platform.pathSeparator}$name';
-//   }
-// }
 
 Future<void> extractLib(LibArchiveConfig config) async {
   if (config.libOutFile.existsSync()) return;

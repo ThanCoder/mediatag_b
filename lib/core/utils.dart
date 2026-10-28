@@ -10,7 +10,6 @@ Future<String> getPlatformLibFullPath(String libName) async {
   }
   if (Platform.isAndroid) {
     final path = await AndroidNativePath.instance.getNativeLib(libName);
-    // final path = await AndroidNativePath.instance.getFFmpegLibPath();
     return path!;
   }
   throw UnsupportedError('Unsupported ${Platform.operatingSystem}!');
@@ -27,7 +26,7 @@ String getDesktopLibFullPath(String libName) {
   // (ဥပမာ - app တည်ရှိရာ folder အောက်မှ lib/libname.so)
 
   if (Platform.isWindows) {
-    return File(executableDir.join('lib').join(libName)).absolute.path;
+    return File(executableDir.join(libName)).absolute.path;
   }
   final libPath = executableDir.join('lib').join(libName);
 

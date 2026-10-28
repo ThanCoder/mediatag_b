@@ -46,6 +46,19 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  void showInfo(String path) async {
+    final res = await pkg.getFileInfo(path);
+    if (res.isOk) {
+      infoText = res.unwrap().text;
+      // final format = res.unwrap().toMap['format'];
+      // print(format);
+    }
+    if (res.isErr) {
+      infoText = res.unwrapError();
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,12 +79,48 @@ class _MyAppState extends State<MyApp> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(infoText),
-        ),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(child: _btns),
+          SliverToBoxAdapter(child: Text(infoText)),
+        ],
       ),
+    );
+  }
+
+  Widget get _btns {
+    return Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      children: [
+        FilledButton(
+          onPressed: () => showInfo('/home/thancoder/Videos/Jennifer Body.mp4'),
+          child: Text('Video Info'),
+        ),
+        FilledButton(
+          onPressed: () => showInfo(
+            '/home/thancoder/Music/The Crew - Get Low [GMV] [oQ6KD_FTix0].m4a',
+          ),
+          child: Text('Audio Info'),
+        ),
+        FilledButton(
+          onPressed: () {
+            pkg.video
+                .genThumbnail(
+                  '/home/thancoder/Videos/Jennifer Body.mp4',
+                  '/home/thancoder/Videos/Jennifer Body',
+                )
+                .then((res) {
+                  if (res.isErr) {
+                    infoText = res.unwrapError();
+                    if (!mounted) return;
+                    setState(() {});
+                  }
+                });
+          },
+          child: Text('Gen Video Thumbnail'),
+        ),
+      ],
     );
   }
 }

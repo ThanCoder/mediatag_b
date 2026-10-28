@@ -1,0 +1,56 @@
+git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg
+cd ffmpeg
+
+
+make distclean
+make clean
+
+
+CFLAGS="-Os -ffunction-sections -fdata-sections" \
+LDFLAGS="-Wl,--gc-sections" \
+./configure \
+  --target-os=mingw32 \
+  --arch=x86_64 \
+  --cross-prefix=x86_64-w64-mingw32- \
+  --prefix="$PWD/build/window" \
+  --enable-small \
+  --enable-pic \
+  --disable-shared \
+  --enable-static \
+  --disable-everything \
+  --disable-doc \
+  --disable-debug \
+  --disable-network \
+  --disable-autodetect \
+  --disable-avdevice \
+  --enable-swresample \
+  --enable-swscale \
+  --disable-bsfs \
+  --disable-hwaccels \
+  --disable-parsers \
+  --enable-zlib \
+  --enable-avutil \
+  --enable-avcodec \
+  --enable-avformat \
+  --enable-avfilter \
+  --enable-filter=format \
+  --enable-filter=scale \
+  --enable-protocol=file \
+  --enable-parser=h264 \
+  --enable-parser=mpegaudio \
+  --enable-demuxer=mov \
+  --enable-demuxer=matroska \
+  --enable-demuxer=ogg \
+  --enable-demuxer=mp3 \
+  --enable-demuxer=flac \
+  --enable-demuxer=wav \
+  --enable-muxer=mov \
+  --enable-muxer=matroska \
+  --enable-muxer=image2 \
+  --enable-decoder=h264 \
+  --enable-decoder=aac \
+  --enable-encoder=mjpeg\
+  --enable-encoder=png
+
+
+  make -j$(nproc) && make install

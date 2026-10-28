@@ -1,0 +1,130 @@
+## Android -> android-arm64
+
+cd ~/Documents/ffmpeg-9.0.1
+
+make distclean
+
+export NDK="$ANDROID_NDK_HOME"
+export API=24
+export TOOLCHAIN="$NDK/toolchains/llvm/prebuilt/linux-x86_64"
+
+
+./configure \
+  --prefix="$PWD/build/android-arm64" \
+  --target-os=android \
+  --arch=aarch64 \
+  --cpu=armv8-a \
+  --cc="$TOOLCHAIN/bin/aarch64-linux-android${API}-clang" \
+  --cxx="$TOOLCHAIN/bin/aarch64-linux-android${API}-clang++" \
+  --ar="$TOOLCHAIN/bin/llvm-ar" \
+  --ranlib="$TOOLCHAIN/bin/llvm-ranlib" \
+  --strip="$TOOLCHAIN/bin/llvm-strip" \
+  --nm="$TOOLCHAIN/bin/llvm-nm" \
+  --enable-cross-compile \
+  --enable-small \
+  --enable-pic \
+  --disable-shared \
+  --enable-static \
+  --disable-everything \
+  --disable-doc \
+  --disable-debug \
+  --disable-network \
+  --disable-autodetect \
+  --disable-avdevice \
+  --enable-swresample \
+  --enable-swscale \
+  --disable-bsfs \
+  --disable-hwaccels \
+  --disable-parsers \
+  --enable-zlib \
+  --enable-avutil \
+  --enable-avcodec \
+  --enable-avformat \
+  --enable-avfilter \
+  --enable-filter=format \
+  --enable-filter=scale \
+  --enable-protocol=file \
+  --enable-parser=h264 \
+  --enable-parser=mpegaudio \
+  --enable-demuxer=mov \
+  --enable-demuxer=matroska \
+  --enable-demuxer=ogg \
+  --enable-demuxer=mp3 \
+  --enable-demuxer=flac \
+  --enable-demuxer=wav \
+  --enable-muxer=mov \
+  --enable-muxer=matroska \
+  --enable-muxer=image2 \
+  --enable-decoder=h264 \
+  --enable-decoder=aac \
+  --enable-encoder=mjpeg\
+  --enable-encoder=png \
+  --optflags="-Os" \
+  --extra-cflags="-ffunction-sections -fdata-sections" \
+  --extra-ldflags="-Wl,--gc-sections"
+
+make -j$(nproc)
+make install
+
+## Android -> android-arm
+
+export NDK="$ANDROID_NDK_HOME"
+export API=24
+export TOOLCHAIN="$NDK/toolchains/llvm/prebuilt/linux-x86_64"
+
+./configure \
+  --prefix="$PWD/build/android-arm" \
+  --target-os=android \
+  --arch=arm \
+  --cpu=armv7-a \
+  --cc="$TOOLCHAIN/bin/armv7a-linux-androideabi${API}-clang" \
+  --cxx="$TOOLCHAIN/bin/armv7a-linux-androideabi${API}-clang++" \
+  --ar="$TOOLCHAIN/bin/llvm-ar" \
+  --ranlib="$TOOLCHAIN/bin/llvm-ranlib" \
+  --strip="$TOOLCHAIN/bin/llvm-strip" \
+  --nm="$TOOLCHAIN/bin/llvm-nm" \
+  --enable-cross-compile \
+  --enable-small \
+  --enable-pic \
+  --disable-shared \
+  --enable-static \
+  --disable-everything \
+  --disable-doc \
+  --disable-debug \
+  --disable-network \
+  --disable-autodetect \
+  --disable-avdevice \
+  --enable-swresample \
+  --enable-swscale \
+  --disable-bsfs \
+  --disable-hwaccels \
+  --disable-parsers \
+  --enable-zlib \
+  --enable-avutil \
+  --enable-avcodec \
+  --enable-avformat \
+  --enable-avfilter \
+  --enable-filter=format \
+  --enable-filter=scale \
+  --enable-protocol=file \
+  --enable-parser=h264 \
+  --enable-parser=mpegaudio \
+  --enable-demuxer=mov \
+  --enable-demuxer=matroska \
+  --enable-demuxer=ogg \
+  --enable-demuxer=mp3 \
+  --enable-demuxer=flac \
+  --enable-demuxer=wav \
+  --enable-muxer=mov \
+  --enable-muxer=matroska \
+  --enable-muxer=image2 \
+  --enable-decoder=h264 \
+  --enable-decoder=aac \
+  --enable-encoder=mjpeg\
+  --enable-encoder=png \
+  --optflags="-Os" \
+  --extra-cflags="-ffunction-sections -fdata-sections" \
+  --extra-ldflags="-Wl,--gc-sections"
+
+make -j$(nproc)
+make install
