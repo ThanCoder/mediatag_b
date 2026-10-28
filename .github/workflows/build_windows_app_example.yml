@@ -24,6 +24,9 @@ jobs:
         cache: true
         # flutter-action အတွက် working directory (လိုအပ်ရင် cache path တွေအတွက် အသုံးဝင်ပါတယ်)
         flutter-path: example # (သို့မဟုတ် ပုံမှန်အတိုင်း root ကနေ run တာဖြစ်လို့ အောက်က step တွေမှာ path ထည့်ပေးရုံနဲ့လည်း ရပါတယ်)
+    
+    - name: Clean Build Cache
+        run: flutter clean
 
     - name: Install Dependencies
       run: flutter pub get
