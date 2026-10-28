@@ -20,6 +20,7 @@ jobs:
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
+        flutter-version: "3.x"
         channel: 'stable'
         cache: true
         # flutter-action အတွက် working directory (လိုအပ်ရင် cache path တွေအတွက် အသုံးဝင်ပါတယ်)
