@@ -6,15 +6,6 @@ import 'package:hooks/hooks.dart';
 import 'package:mediatag_b/core/keys.dart';
 import 'package:path/path.dart' as p;
 
-const String linuxLibUrl =
-    'https://github.com/ThanCoder/mediatag_b/releases/download/mediatag_b.v2/mediatag_b_binary-linux.zip';
-const String windowLibUrl =
-    'https://github.com/ThanCoder/mediatag_b/releases/download/mediatag_b.v2/mediatag_b_binary-window.zip';
-const String androidArm64LibUrl =
-    'https://github.com/ThanCoder/mediatag_b/releases/download/mediatag_b.v2/mediatag_b_binary-android-arm64.zip';
-const String androidArmLibUr =
-    'https://github.com/ThanCoder/mediatag_b/releases/download/mediatag_b.v2/mediatag_b_binary-android-arm.zip';
-
 void main(List<String> args) async {
   await build(args, (input, output) async {
     final packageName = input.packageName;
@@ -148,7 +139,7 @@ class LibArchiveConfig {
       final androidLibPath = p.join(sourceLib, targetOS.name);
       final libOutFile = File(p.join(androidLibPath, targetArch.name, libName));
       final downloadUrl = switch (targetArch) {
-        .arm => androidArmLibUr,
+        .arm => androidArmLibUrl,
         .arm64 => androidArm64LibUrl,
         _ => UnsupportedError('error: ${targetOS.name} - ${targetArch.name}'),
       };
